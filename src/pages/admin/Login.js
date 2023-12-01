@@ -1,4 +1,87 @@
+import axios from "axios";
+import { useState , useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import  { useNavigate } from 'react-router-dom'
+
+
+
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const Loggedin = () => {
+
+   if(localStorage.getItem("token"))
+    {
+      
+      const configuration = {
+      method: "post",
+      url: process.env.REACT_APP_API_URL+"/me",
+      data: {},
+      headers: { 
+        'Accept': 'application/json', 
+        'Authorization': 'Bearer '+localStorage.getItem("token"),
+      }
+    };
+
+    axios(configuration)
+    .then((result) => {
+      
+      
+        navigate('/admin/dashboard');
+      
+      
+
+    }).catch((error) => {
+     localStorage.clear();
+    })
+    }
+    
+  }
+
+
+  const doLogin = () => { 
+    
+    const configuration = {
+      method: "post",
+      url: process.env.REACT_APP_API_URL+"/login",
+      data: {
+        email,
+        password,
+      },
+    };
+
+    axios(configuration)
+    .then((result) => {
+     
+     let res = result.data;
+
+     console.log(res)
+     if(res.status == false)
+     {
+        toast.error(res.message)
+     }
+     else
+     {
+       // console.log(res.data.access_token)
+       localStorage.setItem("token", res.data.access_token);
+       navigate('/admin/dashboard');
+     }
+
+    })
+    .catch((error) => {console.log(error);})
+
+  };
+
+
+  useEffect(() => {
+   
+   Loggedin(); 
+   
+  },[]);
+
   return (
     <div className="bg-gradient-primary">
   <div className="container">
@@ -19,6 +102,7 @@ function Login() {
                     <div className="form-group">
                       <input
                         type="email"
+                        onChange={(e) => setEmail(e.target.value)}
                         className="form-control form-control-user"
                         id="exampleInputEmail"
                         aria-describedby="emailHelp"
@@ -28,6 +112,7 @@ function Login() {
                     <div className="form-group">
                       <input
                         type="password"
+                        onChange={(e) => setPassword(e.target.value)}
                         className="form-control form-control-user"
                         id="exampleInputPassword"
                         placeholder="Password"
@@ -49,10 +134,11 @@ function Login() {
                       </div>
                     </div>
                     <a
-                      href="index.html"
+                      onClick={() => doLogin()}
                       className="btn btn-primary btn-user btn-block"
                     >
                       Login
+                      <ToastContainer />
                     </a>
                     <hr />
                     <a

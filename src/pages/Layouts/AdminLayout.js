@@ -1,7 +1,71 @@
-import { Outlet, Link } from "react-router-dom";
+import axios from "axios";
+import { Outlet, Link , useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 
 const AdminLayout = () => {
+  const [name, setName] = useState("");
+
+  const logout = () => {
+
+    const configuration = {
+      method: "post",
+      url: process.env.REACT_APP_API_URL+"/logout",
+      data: {},
+      headers: { 
+        'Accept': 'application/json', 
+        'Authorization': 'Bearer '+localStorage.getItem("token"),
+      }
+    };
+    
+    // localStorage.removeItem("token");
+      localStorage.clear();
+    axios(configuration)
+    .then((result) => {
+      
+     navigate('/admin');
+
+    }).catch((error) => {
+     navigate('/admin');
+    })
+  }
+  
+  const checkLogin = () => {
+    const configuration = {
+      method: "post",
+      url: process.env.REACT_APP_API_URL+"/me",
+      data: {},
+      headers: { 
+        'Accept': 'application/json', 
+        'Authorization': 'Bearer '+localStorage.getItem("token"),
+      }
+    };
+
+    axios(configuration)
+    .then((result) => {
+      let userData = result.data;
+      setName(userData.name);
+
+    }).catch((error) => {
+     navigate('/admin');
+    })
+     
+  };
+
+  const navigate = useNavigate();
+  useEffect(() => {
+     console.log(useEffect)
+    if(!localStorage.getItem("token"))
+    {
+      navigate('/admin');
+    }
+    else
+    {
+      checkLogin();
+    }
+
+  },[]);
+
   return (
     <>
   <div id="wrapper">
@@ -436,7 +500,7 @@ const AdminLayout = () => {
                 aria-expanded="false"
               >
                 <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                  Douglas McGee
+                  {name}
                 </span>
                 <img
                   className="img-profile rounded-circle"
@@ -463,9 +527,8 @@ const AdminLayout = () => {
                 <div className="dropdown-divider" />
                 <a
                   className="dropdown-item"
-                  href="#"
-                  data-toggle="modal"
-                  data-target="#logoutModal"
+                  onClick={logout}
+                  
                 >
                   <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" />
                   Logout
@@ -533,7 +596,7 @@ const AdminLayout = () => {
           >
             Cancel
           </button>
-          <a className="btn btn-primary" href="login.html">
+          <a className="btn btn-primary" onClick={logout}>
             Logout
           </a>
         </div>
