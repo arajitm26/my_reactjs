@@ -90,10 +90,10 @@ const AdminLayout = () => {
       <hr className="sidebar-divider my-0" />
       {/* Nav Item - Dashboard */}
       <li className="nav-item active">
-        <a className="nav-link" href="index.html">
+        <Link className="nav-link" to="/admin/dashboard">
           <i className="fas fa-fw fa-tachometer-alt" />
           <span>Dashboard</span>
-        </a>
+        </Link>
       </li>
       {/* Divider */}
       <hr className="sidebar-divider" />
@@ -512,10 +512,10 @@ const AdminLayout = () => {
                 className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="userDropdown"
               >
-                <a className="dropdown-item" href="#">
+                <Link className="dropdown-item" to="/admin/profile">
                   <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400" />
                   Profile
-                </a>
+                </Link>
                 <a className="dropdown-item" href="#">
                   <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400" />
                   Settings

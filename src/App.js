@@ -10,6 +10,8 @@ import Dashboard from './pages/admin/Dashboard.js';
 import About from './pages/About.js';
 import Contact from './pages/Contact.js';
 import AdminLayout from './pages/Layouts/AdminLayout.js';
+import Profile from './pages/admin/Profile.js';
+
 
 
 
@@ -37,6 +39,8 @@ function App() {
         <Route path="admin" element={<AdminLogin />} />
         <Route path="admin/*" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+
           <Route path="*" element={<NoPage />} />
         </Route>
         <Route path="*" element={<NoPage />} />
